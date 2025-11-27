@@ -1,52 +1,61 @@
-# 託運委託平台（綠界金流測試版）
+# 託運委託平台 Demo（Spring Boot + 前端 + 綠界金流）
 
-這是一個示範專案，用來練習：
+> consign-platform-main  
+> 後端：`consignwork`　|　前端：`frontend-consign`
 
-- Spring Boot 後端 + MySQL + JPA
-- 託運委託單 / 付款紀錄的基本資料表
-- 串接綠界全方位金流（測試環境 MerchantID=2000132）
-- 前端簡單 HTML 頁面，示範「建立測試委託單並導到綠界付款頁」
+這是一個練習「託運委託平台」的全端專案，模擬會員在平台上建立託運委託訂單，並透過 **綠界金流（ECPay）信用卡付款** 完成付款流程。  
+專案同時整合：
 
-> 注意：
-> - 專案目前只使用「綠界測試環境」，不會真的扣款。
-> - 不需要先申請自己的特店，只要把 MySQL 設定好就能跑完整流程。
-> - 安全性 / 權限驗證（JWT 等）為了簡化暫時省略。
+- Spring Boot + Spring Data JPA
+- MySQL 資料庫
+- 綠界金流測試環境
+- 前後端分離（簡易 HTML/CSS/JS 前端）
+- ngrok 將本機服務暴露到外網，讓綠界可回呼（Callback）
 
-## 專案結構
+---
+
+## 功能介紹
+
+### 1. 託運委託管理
+
+- 建立託運委託單（Consign Order）
+  - 起始地址（start_address）
+  - 目的地址（end_address）
+  - 預計取件時間（expected_pickup_time）
+  - 貨物說明（goods_description）
+  - 貨物重量（goods_weight）
+  - 委託金額（total_price）
+- 查詢自己的託運委託列表
+
+### 2. 付款流程（綠界 ECPay）
+
+- 根據託運委託單建立付款紀錄（Payment）
+- 呼叫綠界金流 API，產生自動送出 form 的結帳 HTML
+- 導向至綠界測試環境完成信用卡付款
+-（已預留）綠界付款完成後，透過 Callback / Return URL 更新付款狀態與訂單狀態
+
+---
+
+## 系統架構
 
 ```text
-consign-platform-main/
-├─ README.md
-├─ consignwork/            # Spring Boot 後端
-└─ frontend-html/          # 靜態前端示範頁面
-```
-
-### 後端啟動方式
-
-1. 建立 MySQL 資料庫：
-
-   ```sql
-   CREATE DATABASE consign_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-   ```
-
-2. 修改 `consignwork/src/main/resources/application.yml` 裡的：
-
-   - `spring.datasource.username`
-   - `spring.datasource.password`
-
-3. 在 `consignwork` 目錄下執行：
-
-   ```bash
-   mvn spring-boot:run
-   ```
-
-4. 啟動後，打開瀏覽器到：
-
-   - `http://localhost:8080/demo/test-checkout`  
-     → 會建立一筆測試委託單與付款，並自動導到綠界「測試付款頁」。
-
-### 主要 API
-
-- `POST /api/consign/orders` 建立委託單（JSON）
-- `POST /api/payment/ecpay/checkout/{consignId}?payerId=1` 建立綠界訂單，回傳自動 submit 的 HTML form
-- `POST /api/payment/ecpay/return` 接收綠界背景通知（ReturnURL），驗證 CheckMacValue 後更新付款/委託單狀態
+consign-platform-main
+├─ consignwork/          # Spring Boot 後端
+│  ├─ src/main/java/demo/consign
+│  │   ├─ controller/    # PaymentController, EcpayCallbackController, ConsignOrderController ...
+│  │   ├─ entity/        # ConsignOrder, Payment, User ...
+│  │   ├─ repository/    # ConsignOrderRepository, PaymentRepository, UserRepository ...
+│  │   ├─ service/       # ConsignOrderService, PaymentService, EcpayService ...
+│  │   └─ util/          # CheckMacValueUtil 等工具類別
+│  └─ src/main/resources/
+│      └─ application.yml  # DB 連線、server port、ECPay 相關設定
+│
+└─ frontend-consign/     # 前端（純靜態網頁）
+    ├─ index.html        # 假登入 + 快速導向測試結帳
+    ├─ consign-create.html  # 新增託運委託 + 立即付款
+    ├─ consign-list.html    # 我的託運委託列表（呼叫後端 API）
+    ├─ css/style.css
+    └─ js/
+        ├─ api.js        # 簡易 API wrapper (fetch)
+        ├─ auth.js       # 假登入（localStorage 紀錄 userId）
+        └─ consign.js    # 建立委託 + 呼叫後端建立付款並導向綠界
