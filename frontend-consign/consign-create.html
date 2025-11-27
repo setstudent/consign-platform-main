@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>新增託運委託</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header>
+  <h1>新增託運委託</h1>
+  <nav>
+    <a href="index.html">首頁</a>
+    <a href="consign-create.html">新增託運委託</a>
+    <a href="consign-list.html">我的託運委託</a>
+  </nav>
+</header>
+
+<main>
+  <section class="card">
+    <form id="consignForm">
+      <div class="form-row">
+        <label>起始地址（start_address）</label>
+        <input type="text" id="startAddress" required
+               placeholder="例：台北市大安區信義路一段 1 號" />
+      </div>
+
+      <div class="form-row">
+        <label>目的地址（end_address）</label>
+        <input type="text" id="endAddress" required
+               placeholder="例：台中市西屯區台灣大道二段 99 號" />
+      </div>
+
+      <div class="form-row">
+        <label>預計取件時間（expected_pickup_time）</label>
+        <input type="datetime-local" id="pickupTime" required />
+      </div>
+
+      <div class="form-row">
+        <label>貨物說明（goods_description）</label>
+        <input type="text" id="goodsDesc" required placeholder="例：測試託運貨物" />
+      </div>
+
+      <div class="form-row">
+        <label>貨物重量（goods_weight，KG）</label>
+        <input type="number" id="goodsWeight" min="1" value="1" />
+      </div>
+
+      <div class="form-row">
+        <label>委託金額（total_price，新台幣）</label>
+        <input type="number" id="totalPrice" min="1" value="100" required />
+      </div>
+
+      <div class="form-row">
+        <button type="submit">建立委託並前往付款</button>
+      </div>
+
+      <p id="msg" class="status"></p>
+    </form>
+  </section>
+</main>
+
+<script src="js/api.js"></script>
+<script src="js/consign.js"></script>
+</body>
+</html>

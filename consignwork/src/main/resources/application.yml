@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/consign_db?useSSL=false&serverTimezone=Asia/Taipei
+    username: root
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+
+server:
+  port: 8080
+
+ecpay:
+  environment: stage
+  merchant-id: 2000132
+  hash-key: 5294y06JbISpM5x9
+  hash-iv: v77hoKGq4kWxNNIS
+  return-url: http://localhost:8080/api/payment/ecpay/return
+  order-result-url: http://localhost:8080/payment/result

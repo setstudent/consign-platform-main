@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>我的託運委託</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header>
+  <h1>我的託運委託</h1>
+  <nav>
+    <a href="index.html">首頁</a>
+    <a href="consign-create.html">新增託運委託</a>
+    <a href="consign-list.html">我的託運委託</a>
+  </nav>
+</header>
+
+<main>
+  <section class="card">
+    <table id="tblConsign">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>起始地址</th>
+        <th>目的地址</th>
+        <th>金額</th>
+        <th>狀態</th>
+        <th>建立時間</th>
+      </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <p id="listMsg" class="status"></p>
+  </section>
+</main>
+
+<script src="js/api.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const tbody = document.querySelector("#tblConsign tbody");
+    const msg = document.getElementById("listMsg");
+
+    try {
+      const userId = getCurrentUserId();
+      const list = await apiRequest(`/api/consign/orders?shipperId=${userId}`);
+
+      if (!list || list.length === 0) {
+        msg.textContent = "目前沒有任何委託單。";
+        return;
+      }
+
+      list.forEach(o => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${o.id || o.consignId}</td>
+          <td>${o.startAddress}</td>
+          <td>${o.endAddress}</td>
+          <td>${o.totalPrice}</td>
+          <td>${o.status}</td>
+          <td>${o.createdAt || ""}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    } catch (err) {
+      console.error(err);
+      msg.textContent = "載入委託列表失敗：" + err.message;
+    }
+  });
+</script>
+</body>
+</html>

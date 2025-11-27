@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>託運委託平台 - 首頁</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header>
+  <h1>託運委託平台 Demo</h1>
+  <nav>
+    <a href="index.html">首頁</a>
+    <a href="consign-create.html">新增託運委託</a>
+    <a href="consign-list.html">我的託運委託</a>
+  </nav>
+</header>
+
+<main>
+  <section class="card">
+    <h2>假登入（Demo 用）</h2>
+    <p>目前後端沒有做完整會員系統，先用固定使用者進行測試。</p>
+    <button id="btnLogin">一鍵登入測試帳號（userId=1）</button>
+    <p id="loginStatus" class="status"></p>
+  </section>
+
+  <section class="card">
+    <h2>快速測試綠界付款</h2>
+    <p>如果後端有跑 <code>/demo/test-checkout</code>，可以直接點下面按鈕測試。</p>
+    <button id="btnTestCheckout">前往測試結帳</button>
+  </section>
+</main>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>
