@@ -59,3 +59,27 @@ consign-platform-main
         ├─ api.js        # 簡易 API wrapper (fetch)
         ├─ auth.js       # 假登入（localStorage 紀錄 userId）
         └─ consign.js    # 建立委託 + 呼叫後端建立付款並導向綠界
+
+---
+
+## 使用技術（Tech Stack）
+
+### 後端
+
+- Java 21
+- Spring Boot（Spring Web / Spring MVC）
+- Spring Data JPA + Hibernate
+- MySQL 8
+- Lombok（如有使用）
+
+### 前端
+
+- HTML5 / CSS3
+- 原生 JavaScript（Fetch API）
+- VS Code + Live Server（或其他靜態檔案伺服器）
+
+### 其他
+
+- Git / GitHub
+- ngrok（將 `localhost:8080` 暴露到外網給綠界回呼）
+- 綠界 ECPay 測試環境（信用卡測試）
